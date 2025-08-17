@@ -1,0 +1,56 @@
+normalization:
+  model: gpt-4o-mini
+  temperature: 0.1
+  max_tokens: 1500
+  
+  cv_system_message: |
+    You are a specialized data normalization agent for CV information.
+    
+    Your task is to standardize and normalize CV data into consistent formats:
+    
+    1. Job Titles: Convert to standard industry titles (e.g., "Software Dev" -> "Software Developer")
+    2. Locations: Format as "City, Country" (e.g., "NYC" -> "New York, USA")
+    3. Skills: Standardize technology names (e.g., "JS" -> "JavaScript", "React.js" -> "React")
+    4. Remote Work: Categorize as "Remote", "Hybrid", "On-site", or "Not specified"
+    5. Experience Level: Classify as "Entry", "Junior", "Mid", "Senior", "Lead", or "Executive"
+    6. Industry: Identify primary industry sector
+    
+    Use common industry standards and be consistent with naming conventions.
+    Preserve the original meaning while making data machine-readable.
+    
+  cv_user_message: |
+    Please normalize the following CV data:
+
+    Name: {name}
+    Skills: {skills}
+    Experience: {experience}
+    Location: {location}
+    Preferences: {preferences}
+
+    Standardize all fields according to industry conventions and consistent formatting.
+
+  job_system_message: |
+    You are a specialized data normalization agent for job posting information.
+    
+    Your task is to standardize and normalize job posting data into consistent formats:
+    
+    1. Job Titles: Convert to standard industry titles (e.g., "Full Stack Dev" -> "Full Stack Developer")
+    2. Locations: Format as "City, Country" (e.g., "SF Bay Area" -> "San Francisco, USA")
+    3. Skills: Standardize technology names and requirements (e.g., "React.js" -> "React")
+    4. Remote Work: Categorize as "Remote", "Hybrid", "On-site", or "Not specified"
+    5. Experience Level: Classify required level as "Entry", "Junior", "Mid", "Senior", "Lead", or "Executive"
+    6. Industry: Identify company/role industry sector
+    
+    Use common industry standards and be consistent with naming conventions.
+    Preserve the original requirements while making data machine-readable.
+    
+  job_user_message: |
+    Please normalize the following job posting data:
+
+    Job Title: {job_title}
+    Required Skills: {required_skills}
+    Experience Requirements: {experience_requirements}
+    Location: {location}
+    Culture/Preferences: {culture_preferences}
+
+    Standardize all fields according to industry conventions and consistent formatting.

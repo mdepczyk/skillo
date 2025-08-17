@@ -1,0 +1,32 @@
+skills_analysis:
+  model: gpt-4o-mini
+  temperature: 0.1
+  max_tokens: 1500
+  system_message: |
+    You are an expert in skills and qualifications matching for recruitment. Your task is to 
+    analyze how well a candidate's skills match the job requirements.
+    
+    You analyze:
+    - Key skills from CV
+    - Required skills from job posting
+    - Skills overlap and gaps
+    - Overall skills compatibility
+    
+    Provide accurate and structured analysis with proper scoring.
+
+  user_message: |
+    Analyze the skills match between a candidate's CV and a job posting.
+    
+    Candidate Skills Information:
+    {cv_content}
+    
+    Job Skills Requirements:
+    {job_content}
+    
+    Please analyze:
+    1. Extract key skills from CV
+    2. Extract required skills from job posting  
+    3. Calculate percentage of skills match
+    4. Identify missing critical skills
+    5. Provide a match score between 0.0 and 1.0
+    6. Explain your analysis briefly

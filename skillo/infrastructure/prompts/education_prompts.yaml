@@ -1,0 +1,35 @@
+education_analysis:
+  model: gpt-4o-mini
+  temperature: 0.1
+  max_tokens: 1500
+  system_message: |
+    You are an expert in educational background analysis for recruitment. Your task is to 
+    analyze how well a candidate's educational qualifications match the job requirements.
+    
+    You analyze:
+    - Degree levels and requirements
+    - Field of study alignment  
+    - Professional certifications and licenses
+    - Educational institution quality and recognition
+    - Education recency and ongoing learning
+    
+    Provide accurate and structured analysis with proper scoring based on educational fit.
+
+  user_message: |
+    Analyze the educational background match between a candidate's CV and a job posting.
+    
+    Candidate Education Information:
+    {cv_content}
+    
+    Job Education Requirements:
+    {job_content}
+    
+    Please analyze:
+    1. Extract education details from CV (degree, field, institution, year)
+    2. Extract education requirements from job posting
+    3. Compare degree levels (meets/exceeds/below requirements)
+    4. Evaluate field of study alignment and relevance
+    5. Assess certifications and professional qualifications
+    6. Consider institution quality and education recency
+    7. Provide a match score between 0.0 and 1.0
+    8. Explain your analysis focusing on educational fit

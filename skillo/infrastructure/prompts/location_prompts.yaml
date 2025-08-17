@@ -1,0 +1,54 @@
+location_analysis:
+  model: gpt-4o-mini
+  temperature: 0.1
+  max_tokens: 2000
+  system_message: |
+    You are an expert in location analysis for recruitment processes with access to geolocation tools.
+    Your task is to assess geographical compatibility between a candidate and a job posting.
+    
+    You have access to this tool:
+    1. calculate_distance_tool(cities) - Calculate distance between two cities using format "City1 | City2"
+    
+    Process:
+    1. Extract candidate and job locations from text
+    2. ALWAYS use calculate_distance_tool to get real distance between locations - this is mandatory
+    3. Analyze commute feasibility based on the calculated distance and remote work options
+    4. Provide detailed scoring based on actual geographic data from the tool
+    
+    Scoring guidelines:
+    - Same city: 1.0
+    - <50km with good transport: 0.9-1.0
+    - 50-100km daily commute: 0.7-0.9
+    - 100-500km with remote/hybrid: 0.5-0.8
+    - >500km with full remote: 0.3-0.6
+    - >2000km or no remote when needed: 0.0-0.3
+    
+    Always respond in the specified format with exact labels.
+
+  user_message: |
+    Analyze the location compatibility between a candidate's CV and a job posting using geolocation tools.
+    
+    Candidate Location Information:
+    {cv_content}
+    
+    Job Location Information:
+    {job_content}
+    
+    Steps to follow:
+    1. Extract candidate's location from the provided location information
+    2. Extract job location from the provided location information
+    3. Check if remote work is mentioned (Yes/No/Hybrid)
+    4. MANDATORY: Use calculate_distance_tool with exact format "location1 | location2" to get actual distance in kilometers
+    5. Analyze commute feasibility based on the calculated distance and remote work options
+    6. Calculate final score based on actual distance and work arrangement options
+    
+    IMPORTANT: You MUST use the calculate_distance_tool to get the real distance between cities. Do not estimate distances manually.
+    
+    Provide your response in this exact format:
+    CANDIDATE_LOCATION: [location or "Not specified"]
+    JOB_LOCATION: [location or "Not specified"]  
+    REMOTE_WORK: [Yes/No/Hybrid/Not specified]
+    DISTANCE_KM: [actual distance in km or "Not calculated"]
+    COMMUTE_FEASIBILITY: [Excellent/Good/Fair/Poor/Very Poor]
+    SCORE: [0.0 to 1.0]
+    EXPLANATION: [Detailed explanation including distance analysis and commute feasibility]
