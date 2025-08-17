@@ -46,7 +46,6 @@ The application uses 6 specialized agents coordinated by a supervisor:
 - **Document Processing**: pypdf
 - **Data Processing**: pandas, numpy
 - **Deployment**: Docker, docker-compose, Poetry
-- **Web Server**: nginx (production)
 
 ## 📋 Prerequisites
 
