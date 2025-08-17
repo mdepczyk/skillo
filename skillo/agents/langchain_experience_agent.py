@@ -1,0 +1,128 @@
+import os
+from typing import Any, Dict
+
+import yaml
+from langchain.schema import HumanMessage, SystemMessage
+from langchain_openai import ChatOpenAI
+from pydantic import ValidationError
+
+from skillo.enums import ExperienceLevel
+from skillo.schemas import ExperienceAnalysisResponse
+from skillo.tools import calculate_years_between_tool, get_current_date_tool
+from skillo.utils.logger import logger
+
+
+class LangChainExperienceAgent:
+
+    AGENT_NAME = "EXPERIENCE AGENT"
+
+    DEFAULT_RESPONSE = {
+        "cv_experience_years": "Not specified",
+        "required_experience_years": "Not specified",
+        "cv_level": ExperienceLevel.NOT_SPECIFIED.value,
+        "required_level": ExperienceLevel.NOT_SPECIFIED.value,
+        "score": 0.0,
+        "explanation": "Error in experience analysis",
+    }
+
+    def __init__(self):
+        prompts_dir = os.getenv("PROMPTS_DIR")
+        prompt_template = f"{prompts_dir}/experience_prompts.yaml"
+
+        with open(prompt_template, "r", encoding="utf-8") as f:
+            self.prompt_config = yaml.safe_load(f)["experience_analysis"]
+
+        self.llm = ChatOpenAI(
+            model=self.prompt_config["model"],
+            temperature=self.prompt_config["temperature"],
+            max_tokens=self.prompt_config["max_tokens"],
+        )
+
+        self.tools = [get_current_date_tool, calculate_years_between_tool]
+        self.llm_with_tools = self.llm.bind_tools(self.tools)
+        self.llm_structured = self.llm.with_structured_output(
+            ExperienceAnalysisResponse
+        )
+
+    def analyze_experience_match(
+        self, cv_content: str, job_content: str
+    ) -> Dict[str, Any]:
+        logger.info(self.AGENT_NAME, "Starting experience analysis")
+
+        try:
+            system_message = SystemMessage(
+                content=self.prompt_config["system_message"]
+            )
+            user_message = HumanMessage(
+                content=self.prompt_config["user_message"].format(
+                    cv_content=cv_content, job_content=job_content
+                )
+            )
+
+            messages = [system_message, user_message]
+
+            tool_response = self.llm_with_tools.invoke(messages)
+
+            enhanced_content = user_message.content
+            if (
+                hasattr(tool_response, "tool_calls")
+                and tool_response.tool_calls
+            ):
+                logger.info(self.AGENT_NAME, "Date calculation tools called")
+                for tool_call in tool_response.tool_calls:
+                    if tool_call["name"] == "get_current_date_tool":
+                        tool_result = get_current_date_tool.invoke({})
+                        logger.info(
+                            self.AGENT_NAME,
+                            "Current date retrieved",
+                            str(tool_result),
+                        )
+                        enhanced_content += (
+                            f"\n\nCurrent date info: {tool_result}"
+                        )
+                    elif tool_call["name"] == "calculate_years_between_tool":
+                        tool_result = calculate_years_between_tool.invoke(
+                            tool_call["args"]
+                        )
+                        logger.info(
+                            self.AGENT_NAME,
+                            "Years calculated",
+                            str(tool_result),
+                        )
+                        enhanced_content += (
+                            f"\n\nYears calculation: {tool_result}"
+                        )
+
+            user_message = HumanMessage(content=enhanced_content)
+            structured_messages = [system_message, user_message]
+
+            response: ExperienceAnalysisResponse = self.llm_structured.invoke(
+                structured_messages
+            )
+
+            result = {
+                "cv_experience_years": response.cv_experience_years,
+                "required_experience_years": response.required_experience_years,
+                "cv_level": response.cv_level.value,
+                "required_level": response.required_level.value,
+                "score": response.score,
+                "explanation": response.explanation,
+            }
+
+            logger.success(
+                self.AGENT_NAME,
+                "Analysis completed",
+                f"Score: {response.score:.2f}, CV: {response.cv_experience_years} years, Required: {response.required_experience_years}",
+            )
+            return result
+
+        except ValidationError as e:
+            logger.error(self.AGENT_NAME, "Validation error", str(e))
+            return self.DEFAULT_RESPONSE
+        except Exception as e:
+            logger.error(self.AGENT_NAME, "Unexpected error", str(e))
+            return self.DEFAULT_RESPONSE
+
+
+def create_experience_agent() -> LangChainExperienceAgent:
+    return LangChainExperienceAgent()

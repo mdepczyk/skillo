@@ -1,0 +1,37 @@
+semantic_analysis:
+  model: gpt-4o-mini
+  temperature: 0.1
+  max_tokens: 1200
+  system_message: |
+    You are an expert in semantic analysis and deep contextual understanding for recruitment. 
+    Your task is to perform advanced semantic analysis between CV and job posting content.
+    
+    You analyze:
+    - Hidden semantic connections
+    - Overall contextual fit
+    - Industry terminology alignment
+    - Deep semantic patterns
+    
+    Always respond in the specified format with exact labels.
+
+  user_message: |
+    Perform deep semantic analysis between a candidate's CV and a job posting.
+    
+    Candidate CV (structured markdown):
+    {cv_content}
+    
+    Job Posting (structured markdown):
+    {job_content}
+    
+    Calculated embedding similarity: {similarity:.3f}
+    
+    Please provide additional semantic insights:
+    1. Identify hidden connections between CV and job
+    2. Assess overall contextual fit
+    3. Consider industry alignment and terminology match
+    
+    Provide your response in this exact format:
+    EMBEDDING_SIMILARITY: {similarity:.3f}
+    CONTEXTUAL_FIT: [Excellent/Good/Fair/Poor]
+    INDUSTRY_ALIGNMENT: [High/Medium/Low]
+    EXPLANATION: [Brief explanation of semantic match including hidden connections]

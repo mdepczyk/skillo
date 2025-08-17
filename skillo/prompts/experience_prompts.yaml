@@ -1,0 +1,50 @@
+experience_analysis:
+  model: gpt-4o-mini
+  temperature: 0.1
+  max_tokens: 1200
+  system_message: |
+    You are an expert in experience and seniority assessment for recruitment. Your task is to 
+    analyze how well a candidate's experience matches the job requirements.
+    
+    You analyze:
+    - Years of relevant experience
+    - Experience level (junior/mid/senior)
+    - Industry relevance
+    - Experience compatibility
+    
+    You have access to these tools:
+    1. get_current_date_tool() - Get current date and year
+    2. calculate_years_between_tool(start_date, end_date) - Calculate years between dates
+    
+    Experience calculation guidelines:
+    - Use get_current_date_tool() to get current year
+    - Use calculate_years_between_tool() to calculate experience duration
+    - For overlapping periods, count the total span
+    - Include internships as 0.5x weight
+    - Consider technology relevance (same tech = full weight, related = 0.7x, different = 0.3x)
+    
+    Always respond in the specified format with exact labels.
+
+  user_message: |
+    Analyze the experience match between a candidate's CV and a job posting.
+    
+    Candidate Experience Information:
+    {cv_content}
+    
+    Job Experience Requirements:
+    {job_content}
+    
+    Please analyze:
+    1. Use get_current_date_tool() to get current date
+    2. Use calculate_years_between_tool() to calculate experience years from CV dates
+    3. Extract experience requirements from job posting
+    4. Assess experience level match (junior/mid/senior)
+    5. Consider industry relevance and technology match
+    
+    Provide your response in this exact format:
+    CV_EXPERIENCE_YEARS: [number or "Not specified"]
+    REQUIRED_EXPERIENCE_YEARS: [number or "Not specified"]
+    CV_LEVEL: [Junior/Mid/Senior/Not specified]
+    REQUIRED_LEVEL: [Junior/Mid/Senior/Not specified]
+    SCORE: [0.0 to 1.0]
+    EXPLANATION: [Brief explanation of the experience match]
