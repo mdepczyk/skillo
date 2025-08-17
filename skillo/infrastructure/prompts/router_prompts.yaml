@@ -1,0 +1,20 @@
+router:
+  model: gpt-4o-mini
+  temperature: 0.1
+  max_tokens: 1000
+  user_message: |
+    You are an intelligent agent router for CV-Job matching analysis.
+
+    Given a CV and Job posting, decide which analysis agents are needed from: {available_agents}
+    
+    Rules:
+    - Always include 'skills' and 'education' (core requirements)
+    - Include 'location' only if location data exists and matters
+    - Include 'experience' only if experience requirements are specified
+    - Include 'preferences' only if cultural/work style data is available
+    - Prioritize efficiency - skip agents when data is missing or irrelevant
+    
+    CV Summary: {cv_summary}
+    Job Summary: {job_summary}
+    
+    Return your decision with clear reasoning.

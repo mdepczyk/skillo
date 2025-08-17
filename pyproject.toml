@@ -1,0 +1,87 @@
+[tool.poetry]
+name = "skillo"
+version = "0.1.0"
+description = "AI-powered CV and job posting matching using multi-agent analysis"
+authors = ["Michał Dępczyk"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+streamlit = "^1.48.0"
+langchain = "^0.3.27"
+langchain-openai = "^0.3.29"
+langchain-chroma = "^0.2.5"
+openai = "^1.99.5"
+chromadb = "^1.0.16"
+pymupdf = "^1.26.0"
+python-dotenv = "^1.1.1"
+pandas = "^2.3.2"
+numpy = "^2.3.2"
+tiktoken = "^0.11.0"
+pyyaml = "^6.0"
+geopy = "^2.4.0"
+streamlit-pdf-viewer = "^0.0.26"
+joblib = "^1.5.1"
+scikit-learn = "^1.7.1"
+dependency-injector = "^4.48.1"
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.0"
+pytest-asyncio = "^1.1.0"
+black = "^25.1.0"
+isort = "^6.0.0"
+flake8 = "^7.3.0"
+mypy = "^1.17.1"
+
+[tool.poetry.scripts]
+skillo = "skillo.main:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 79
+target-version = ['py313']
+
+[tool.isort]
+profile = "black"
+line_length = 79
+
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
+
+[[tool.mypy.overrides]]
+module = "skillo.domain.events.*"
+strict = true
+disallow_any_explicit = true
+
+[[tool.mypy.overrides]]
+module = "skillo.application.protocols"
+strict = true
+disallow_any_explicit = true
+
+[[tool.mypy.overrides]]
+module = [
+    "streamlit.*",
+    "chromadb.*", 
+    "langchain.*",
+    "dependency_injector.*"
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::DeprecationWarning:langchain_core.*",
+    "ignore::pytest.PytestUnraisableExceptionWarning",
+]

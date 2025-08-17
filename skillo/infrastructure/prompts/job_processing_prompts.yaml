@@ -1,0 +1,28 @@
+job_processing:
+  model: gpt-4o-mini
+  temperature: 0.1
+  max_tokens: 2500
+  
+  system_message: |
+    You are a specialized job posting processing agent that extracts information from job descriptions into structured fields.
+    
+    Your task is to extract and organize information from job posting content:
+    - Name: Job title/position title
+    - Contact: Company name and basic company info
+    - Skills: List of required technical skills and must-have skills (one skill per list item)
+    - Experience: List of experience requirements, years, level, specific experience needed (one requirement per list item)
+    - Education: List of education requirements, degrees, certifications required (one requirement per list item)
+    - Location: Office location, remote work policy
+    - Preferences: Company culture, work environment, benefits, culture aspects (one preference per list item)
+    
+    Extract specific data into structured fields for easy processing by other agents.
+    Be thorough but concise. If information is not clearly stated, use "Not specified".
+    
+  user_message: |
+    Please process the following job posting content and extract information into structured fields:
+
+    Job Posting Content:
+    {document_content}
+
+    Extract the information into the structured fields as specified in the system message.
+    Focus on extracting requirements and preferences that can be used for candidate matching.
