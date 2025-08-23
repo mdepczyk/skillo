@@ -1,5 +1,3 @@
-"""Profile classifier for CV categorization using ML model."""
-
 import os
 
 from joblib import load
@@ -96,18 +94,3 @@ class ProfileClassifier:
                 "PROFILE_CLASSIFIER", "Error during classification", str(e)
             )
             return "Unknown"
-
-    def is_available(self) -> bool:
-        """Check if classifier is available and models are loaded."""
-        return self._loaded
-
-
-_profile_classifier = None
-
-
-def get_profile_classifier() -> ProfileClassifier:
-    """Get global ProfileClassifier instance."""
-    global _profile_classifier
-    if _profile_classifier is None:
-        _profile_classifier = ProfileClassifier()
-    return _profile_classifier

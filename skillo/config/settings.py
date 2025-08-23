@@ -1,5 +1,3 @@
-"""Configuration management for Skillo."""
-
 import os
 from typing import Any, Dict
 

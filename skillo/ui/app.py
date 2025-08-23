@@ -1,11 +1,12 @@
-"""Main Streamlit application for Skillo."""
-
 import os
 import sys
 import streamlit as st
 
-from skillo.config import validate_config
+from skillo.agents import LangChainCVProcessingAgent, LangChainJobProcessingAgent, LangChainNormalizationAgent
+from skillo.tools.profile_classifier import ProfileClassifier
+from skillo.config import validate_config, Config
 from skillo.core import DocumentProcessor, JobMatcher, VectorStore
+from skillo.ui.events import StreamlitMatchingEvents
 from skillo.ui.pages import (
     cv_list_page,
     job_list_page,
@@ -33,9 +34,17 @@ def initialize_components():
     """Initialize and cache application components."""
     try:
         validate_config()
-        processor = DocumentProcessor()
+        config = Config()
+        events = StreamlitMatchingEvents()
+        
+        profile_classifier = ProfileClassifier()
+        cv_agent = LangChainCVProcessingAgent(profile_classifier)
+        job_agent = LangChainJobProcessingAgent()
+        normalizer = LangChainNormalizationAgent()
+        
+        processor = DocumentProcessor(config, cv_agent, job_agent, normalizer)
         vector_store = VectorStore()
-        matcher = JobMatcher()
+        matcher = JobMatcher(config, events)
         return processor, vector_store, matcher
     except Exception as e:
         st.error(f"Error initializing components: {str(e)}")
@@ -46,9 +55,17 @@ def reinitialize_components_after_reset():
     """Reinitialize components after database reset."""
     try:
         initialize_components.clear()
-        processor = DocumentProcessor()
+        config = Config()
+        events = StreamlitMatchingEvents()
+        
+        profile_classifier = ProfileClassifier()
+        cv_agent = LangChainCVProcessingAgent(profile_classifier)
+        job_agent = LangChainJobProcessingAgent()
+        normalizer = LangChainNormalizationAgent()
+        
+        processor = DocumentProcessor(config, cv_agent, job_agent, normalizer)
         vector_store = VectorStore()
-        matcher = JobMatcher()
+        matcher = JobMatcher(config, events)
         return processor, vector_store, matcher
     except Exception as e:
         st.error(f"Error reinitializing components: {str(e)}")

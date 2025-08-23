@@ -1,5 +1,3 @@
-"""Log level enumeration."""
-
 from enum import Enum
 
 

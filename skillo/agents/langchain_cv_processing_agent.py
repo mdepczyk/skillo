@@ -6,7 +6,7 @@ from langchain_openai import ChatOpenAI
 from pydantic import ValidationError
 
 from skillo.schemas import DocumentProcessingResponse
-from skillo.tools.profile_classifier import get_profile_classifier
+from skillo.tools.profile_classifier import ProfileClassifier
 from skillo.utils.logger import logger
 
 
@@ -26,7 +26,9 @@ class LangChainCVProcessingAgent:
         "profile": "Unknown",
     }
 
-    def __init__(self):
+    def __init__(self, profile_classifier: ProfileClassifier):
+        self._profile_classifier = profile_classifier
+        
         prompts_dir = os.getenv("PROMPTS_DIR")
         prompt_template = f"{prompts_dir}/cv_processing_prompts.yaml"
 
@@ -54,8 +56,7 @@ class LangChainCVProcessingAgent:
 
             response: DocumentProcessingResponse = self.llm.invoke(messages)
 
-            profile_classifier = get_profile_classifier()
-            profile = profile_classifier.classify_profile(cv_content)
+            profile = self._profile_classifier.classify_profile(cv_content)
 
             sections = {
                 "personal_information": {"name": response.name, "contact": response.contact},

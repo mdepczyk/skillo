@@ -9,12 +9,7 @@ from chromadb.config import Settings
 from langchain_openai import OpenAIEmbeddings
 
 from skillo.config import Config
-from skillo.exceptions import (
-    DocumentRetrievalError,
-    DocumentStorageError,
-    SimilarityCalculationError,
-    VectorStoreInitializationError,
-)
+from skillo.exceptions.exceptions import SkilloStorageError
 
 
 class VectorStore:
@@ -51,9 +46,7 @@ class VectorStore:
                 )
 
         except Exception as e:
-            raise VectorStoreInitializationError(
-                self.config.CHROMA_DB_PATH, str(e)
-            )
+            raise SkilloStorageError(f"Failed to initialize vector store at '{self.config.CHROMA_DB_PATH}': {str(e)}")
 
     def add_document(self, document: Dict[str, Any]) -> bool:
         """Add document to vector store as chunked sections"""
@@ -61,11 +54,7 @@ class VectorStore:
             if not document.get("structured_data") or not document.get(
                 "structured_data", {}
             ).get("sections"):
-                raise DocumentStorageError(
-                    document.get("id", "unknown"),
-                    self.config.COLLECTION_NAME,
-                    "Document missing structured_data sections",
-                )
+                raise SkilloStorageError("Document missing structured_data sections")
 
             sections = document["structured_data"]["sections"]
 
@@ -124,20 +113,12 @@ class VectorStore:
                 return False
 
         except Exception as e:
-            raise DocumentStorageError(
-                document.get("id", "unknown"),
-                self.config.COLLECTION_NAME,
-                str(e),
-            )
+            raise SkilloStorageError(f"Failed to store document: {str(e)}")
 
     def get_all_documents(self, doc_type: str) -> List[Dict[str, Any]]:
         """Get basic document info for UI - lightweight, always requires doc_type"""
         if not doc_type:
-            raise DocumentRetrievalError(
-                "all documents",
-                self.config.COLLECTION_NAME,
-                "doc_type is required - specify 'cv' or 'job'",
-            )
+            raise SkilloStorageError("doc_type is required - specify 'cv' or 'job'")
 
         try:
 
@@ -163,20 +144,14 @@ class VectorStore:
             return list(unique_documents.values())
 
         except Exception as e:
-            raise DocumentRetrievalError(
-                f"{doc_type} documents", self.config.COLLECTION_NAME, str(e)
-            )
+            raise SkilloStorageError(f"Failed to retrieve {doc_type} documents: {str(e)}")
 
     def get_all_documents_for_matching(
         self, doc_type: str
     ) -> List[Dict[str, Any]]:
         """Get documents with full structured data for matching - always requires doc_type"""
         if not doc_type:
-            raise DocumentRetrievalError(
-                "all documents",
-                self.config.COLLECTION_NAME,
-                "doc_type is required - specify 'cv' or 'job'",
-            )
+            raise SkilloStorageError("doc_type is required - specify 'cv' or 'job'")
 
         try:
 
@@ -257,11 +232,7 @@ class VectorStore:
             return formatted_results
 
         except Exception as e:
-            raise DocumentRetrievalError(
-                f"{doc_type} documents for matching",
-                self.config.COLLECTION_NAME,
-                str(e),
-            )
+            raise SkilloStorageError(f"Failed to retrieve {doc_type} documents for matching: {str(e)}")
 
 
     def get_document_count(self, doc_type: Optional[str] = None) -> int:
@@ -280,9 +251,7 @@ class VectorStore:
             return len(unique_document_ids)
 
         except Exception as e:
-            raise DocumentRetrievalError(
-                "document count", self.config.COLLECTION_NAME, str(e)
-            )
+            raise SkilloStorageError(f"Failed to get document count: {str(e)}")
 
     def calculate_semantic_similarity(
         self, doc1_content: str, doc2_content: str
@@ -307,7 +276,7 @@ class VectorStore:
             return float(similarity)
 
         except Exception as e:
-            raise SimilarityCalculationError(str(e))
+            raise SkilloStorageError(f"Similarity calculation failed: {str(e)}")
 
     def reset_database(self) -> bool:
         """Reset the vector database (delete all data)"""

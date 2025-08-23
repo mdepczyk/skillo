@@ -1,7 +1,3 @@
-"""
-Pydantic schemas for structured data validation
-"""
-
 from .agent_responses import (
     AgentWeights,
     DetailedMatchResult,

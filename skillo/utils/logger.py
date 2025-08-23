@@ -1,7 +1,3 @@
-"""
-Backend logging system without UI dependencies.
-"""
-
 import threading
 from datetime import datetime
 from typing import Any, Dict, List, Optional

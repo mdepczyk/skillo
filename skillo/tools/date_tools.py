@@ -1,7 +1,3 @@
-"""
-Date and time related tools
-"""
-
 from datetime import datetime
 
 from langchain.tools import tool

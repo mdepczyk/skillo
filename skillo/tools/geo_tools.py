@@ -1,7 +1,3 @@
-"""
-Geographic and location-related tools
-"""
-
 from geopy.distance import geodesic
 from geopy.geocoders import Nominatim
 from langchain.tools import tool

@@ -1,6 +1,3 @@
-"""Helper functions for Skillo application."""
-
-
 def format_score(score: float, as_percentage: bool = True) -> str:
     """
     Format a score for display.

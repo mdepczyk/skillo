@@ -4,13 +4,10 @@ from typing import Any, Dict
 import yaml
 from langchain_openai import ChatOpenAI
 
-from skillo.agents.langchain_experience_agent import LangChainExperienceAgent
-from skillo.agents.langchain_location_agent import LangChainLocationAgent
-from skillo.agents.langchain_preferences_agent import LangChainPreferencesAgent
+from skillo.agents.analysis_agents import AnalysisAgents
 from skillo.agents.langchain_semantic_agent import LangChainSemanticAgent
-from skillo.agents.langchain_skills_agent import LangChainSkillsAgent
 from skillo.enums import MatchRecommendation
-from skillo.exceptions import AgentCoordinationError
+from skillo.exceptions.exceptions import SkilloAgentError
 from skillo.utils.logger import logger
 
 
@@ -33,11 +30,9 @@ class LangChainSupervisorAgent:
             max_tokens=self.prompt_config["max_tokens"],
         )
 
-        self.skills_agent = LangChainSkillsAgent()
-        self.location_agent = LangChainLocationAgent()
-        self.experience_agent = LangChainExperienceAgent()
-        self.preferences_agent = LangChainPreferencesAgent()
-        self.semantic_agent = LangChainSemanticAgent(vectorstore=vectorstore)
+        agents = AnalysisAgents()
+        agents.semantic = LangChainSemanticAgent(vectorstore=vectorstore)
+        self.agents = agents
 
         self.default_weights = {
             "skills_weight": 0.30,
@@ -88,7 +83,7 @@ class LangChainSupervisorAgent:
             skills_cv_content = f"Skills: {cv_skills_section}"
             skills_job_content = f"Required Skills: {job_skills_section}"
 
-            skills_result = self.skills_agent.analyze_skills_match(
+            skills_result = self.agents.skills.analyze_skills_match(
                 skills_cv_content, skills_job_content
             )
             results["skills"] = skills_result
@@ -109,7 +104,7 @@ class LangChainSupervisorAgent:
                 f"Location: {job_location_section}\nRemote Work: Not specified"
             )
 
-            location_result = self.location_agent.analyze_location_match(
+            location_result = self.agents.location.analyze_location_match(
                 location_cv_content, location_job_content
             )
             results["location"] = location_result
@@ -130,7 +125,7 @@ class LangChainSupervisorAgent:
             )
             experience_job_content = f"Required Level: Not specified\nRequirements: {job_experience_section}"
 
-            experience_result = self.experience_agent.analyze_experience_match(
+            experience_result = self.agents.experience.analyze_experience_match(
                 experience_cv_content, experience_job_content
             )
             results["experience"] = experience_result
@@ -148,7 +143,7 @@ class LangChainSupervisorAgent:
             preferences_job_content = f"Culture: {job_culture_section}"
 
             preferences_result = (
-                self.preferences_agent.analyze_preferences_match(
+                self.agents.preferences.analyze_preferences_match(
                     preferences_cv_content, preferences_job_content
                 )
             )
@@ -161,7 +156,7 @@ class LangChainSupervisorAgent:
             cv_sections = cv_structured.get("sections", {})
             job_sections = job_structured.get("sections", {})
 
-            semantic_result = self.semantic_agent.analyze_semantic_similarity(
+            semantic_result = self.agents.semantic.analyze_semantic_similarity(
                 cv_sections, job_sections
             )
             results["semantic"] = semantic_result
@@ -219,7 +214,7 @@ class LangChainSupervisorAgent:
             logger.error(
                 self.AGENT_NAME, "Structured data analysis error", error_msg
             )
-            raise AgentCoordinationError("structured data analysis", error_msg)
+            raise SkilloAgentError(f"Structured data analysis failed: {error_msg}")
 
     def _compile_enhanced_explanation(
         self,
