@@ -31,6 +31,7 @@ black = "^25.1.0"
 isort = "^6.0.0"
 flake8 = "^7.3.0"
 mypy = "^1.17.1"
+import-linter = "^2.0"
 
 [tool.poetry.scripts]
 skillo = "skillo.main:main"
@@ -84,4 +85,49 @@ ignore_missing_imports = true
 filterwarnings = [
     "ignore::DeprecationWarning:langchain_core.*",
     "ignore::pytest.PytestUnraisableExceptionWarning",
+]
+
+[tool.importlinter]
+root_package = "skillo"
+
+[[tool.importlinter.contracts]]
+name = "Clean Architecture Layers"
+type = "layers"  
+layers = [
+    "skillo.ui",
+    "skillo.application",
+    "skillo.infrastructure",
+    "skillo.domain",
+]
+
+[[tool.importlinter.contracts]]
+name = "Domain Layer Purity"
+type = "forbidden"
+source_modules = [
+    "skillo.domain",
+]
+forbidden_modules = [
+    "skillo.application",
+    "skillo.infrastructure",
+    "skillo.ui",
+]
+
+[[tool.importlinter.contracts]]
+name = "Critical Architectural Violations - UI to Infrastructure"
+type = "forbidden"
+source_modules = [
+    "skillo.ui",
+]
+forbidden_modules = [
+    "skillo.infrastructure",
+]
+
+[[tool.importlinter.contracts]]
+name = "Critical Architectural Violations - Application to Infrastructure"
+type = "forbidden"
+source_modules = [
+    "skillo.application",
+]
+forbidden_modules = [
+    "skillo.infrastructure",
 ]
