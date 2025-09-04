@@ -85,6 +85,8 @@ ignore_missing_imports = true
 filterwarnings = [
     "ignore::DeprecationWarning:langchain_core.*",
     "ignore::pytest.PytestUnraisableExceptionWarning",
+    "ignore:builtin type.*has no __module__ attribute:DeprecationWarning",
+    "ignore:.*bootstrap.*:DeprecationWarning",
 ]
 
 [tool.importlinter]
