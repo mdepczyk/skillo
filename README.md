@@ -99,9 +99,7 @@ cp .env.example .env
 # Edit .env file and add your OPENAI_API_KEY
 
 # 5. Run the application
-poetry run streamlit run skillo/ui/app.py
-# Or using module entry point:
-poetry run python -m skillo
+poetry run streamlit run skillo/main.py --server.port=8501
 
 # 6. Access the application
 # Open http://localhost:8501 in your browser
@@ -130,7 +128,7 @@ poetry run python -m skillo
 ### 4. Manage Documents
 - Visit **"Document Management"** page
 - View all uploaded documents
-- Export data in CSV or JSON format
+- Export data in CSV format
 - Reset database when needed
 
 ### 5. Monitor Database
