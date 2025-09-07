@@ -6,14 +6,14 @@ import pytest
 from skillo.domain.entities import Document
 from skillo.domain.enums import DocumentType
 from skillo.domain.exceptions import SkilloProcessingError
-from skillo.infrastructure.processing.base_processor import (
+from skillo.infrastructure.document_processing.base_processor import (
     BaseDocumentProcessor,
 )
-from skillo.infrastructure.processing.cv_processor import CVDocumentProcessor
-from skillo.infrastructure.processing.document_processor import (
+from skillo.infrastructure.document_processing.cv_processor import CVDocumentProcessor
+from skillo.infrastructure.document_processing.document_processor import (
     DocumentProcessor,
 )
-from skillo.infrastructure.processing.job_processor import JobDocumentProcessor
+from skillo.infrastructure.document_processing.job_processor import JobDocumentProcessor
 
 
 @pytest.fixture
@@ -194,10 +194,10 @@ def test_document_processor_save_uploaded_file_invalid_type(
 
 
 @patch(
-    "skillo.infrastructure.processing.document_processor.DocumentProcessor.extract_text_from_pdf"
+    "skillo.infrastructure.document_processing.document_processor.DocumentProcessor.extract_text_from_pdf"
 )
 @patch(
-    "skillo.infrastructure.processing.document_processor.DocumentProcessor.generate_document_id"
+    "skillo.infrastructure.document_processing.document_processor.DocumentProcessor.generate_document_id"
 )
 def test_document_processor_process_cv_document(
     mock_gen_id,
@@ -236,10 +236,10 @@ def test_document_processor_process_cv_document(
 
 
 @patch(
-    "skillo.infrastructure.processing.document_processor.DocumentProcessor.extract_text_from_pdf"
+    "skillo.infrastructure.document_processing.document_processor.DocumentProcessor.extract_text_from_pdf"
 )
 @patch(
-    "skillo.infrastructure.processing.document_processor.DocumentProcessor.generate_document_id"
+    "skillo.infrastructure.document_processing.document_processor.DocumentProcessor.generate_document_id"
 )
 def test_document_processor_process_job_document(
     mock_gen_id,
@@ -271,7 +271,7 @@ def test_document_processor_process_job_document(
 
 
 @patch(
-    "skillo.infrastructure.processing.document_processor.DocumentProcessor.extract_text_from_pdf"
+    "skillo.infrastructure.document_processing.document_processor.DocumentProcessor.extract_text_from_pdf"
 )
 def test_document_processor_process_empty_document(
     mock_extract_text,
@@ -305,10 +305,10 @@ def test_document_processor_process_invalid_document_type(
 
 
 @patch(
-    "skillo.infrastructure.processing.document_processor.DocumentProcessor.extract_text_from_pdf"
+    "skillo.infrastructure.document_processing.document_processor.DocumentProcessor.extract_text_from_pdf"
 )
 @patch(
-    "skillo.infrastructure.processing.document_processor.DocumentProcessor.generate_document_id"
+    "skillo.infrastructure.document_processing.document_processor.DocumentProcessor.generate_document_id"
 )
 def test_document_processor_process_chain_error(
     mock_gen_id,

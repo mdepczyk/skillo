@@ -8,8 +8,8 @@ from skillo.infrastructure.chains import (
     LangChainJobProcessingChain,
 )
 from skillo.infrastructure.config.settings import Config
-from skillo.infrastructure.processing.cv_processor import CVDocumentProcessor
-from skillo.infrastructure.processing.job_processor import JobDocumentProcessor
+from skillo.infrastructure.document_processing.cv_processor import CVDocumentProcessor
+from skillo.infrastructure.document_processing.job_processor import JobDocumentProcessor
 
 
 class DocumentProcessor:

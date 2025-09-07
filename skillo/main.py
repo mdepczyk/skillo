@@ -41,11 +41,11 @@ from skillo.infrastructure.chains import (
     create_job_processing_chain,
 )
 from skillo.infrastructure.config.settings import Config
-from skillo.infrastructure.execution.thread_pool_executor import (
+from skillo.infrastructure.concurrency.thread_pool_executor import (
     ThreadPoolParallelExecutor,
 )
 from skillo.infrastructure.logger import logger
-from skillo.infrastructure.processing.document_processor import (
+from skillo.infrastructure.document_processing.document_processor import (
     DocumentProcessor,
 )
 from skillo.infrastructure.repositories.chroma_document_repository import (

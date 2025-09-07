@@ -2,7 +2,7 @@ from skillo.domain.entities import Document
 from skillo.domain.exceptions import SkilloProcessingError
 from skillo.infrastructure.chains import LangChainCVProcessingChain
 from skillo.infrastructure.config.settings import Config
-from skillo.infrastructure.processing.base_processor import (
+from skillo.infrastructure.document_processing.base_processor import (
     BaseDocumentProcessor,
 )
 

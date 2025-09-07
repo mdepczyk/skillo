@@ -221,33 +221,33 @@ make dev
 
 ```
 skillo/
-├── docker-compose.yml          # Docker services configuration
-├── Dockerfile                  # Container build instructions  
-├── pyproject.toml              # Poetry dependency management
-├── data/                       # Document storage
-├── samples/                    # Sample PDF files (CVs and job postings)
-├── chroma_db/                  # ChromaDB vector database storage
-├── tests/                      # Minimal pytest test suite
-└── skillo/                     # Main application package
-    ├── main.py                 # Composition root
-    ├── domain/                 # Business logic
-    │   ├── entities/           # Core business entities
-    │   ├── events/             # Domain event system
-    │   ├── services/           # Domain services
-    │   └── repositories.py     # Data access interfaces
-    ├── application/            # Use cases and workflows
-    │   ├── facades/            # Application facades
-    │   ├── use_cases/          # Business workflows
-    │   ├── protocols.py        # Service contracts
-    │   └── dto.py             # Data transfer objects
-    ├── infrastructure/         # External integrations
-    │   ├── agents/             # AI agents (LangChain)
-    │   ├── config/             # Configuration management
-    │   ├── processing/         # Document processors
-    │   └── repositories/       # Data implementations
-    └── ui/                     # User interface (Streamlit)
-        ├── components/         # Reusable UI components
-        └── views/              # Page views
+├── docker-compose.yml           # Docker services configuration
+├── Dockerfile                   # Container build instructions  
+├── pyproject.toml               # Poetry dependency management
+├── data/                        # Document storage
+├── samples/                     # Sample PDF files (CVs and job postings)
+├── chroma_db/                   # ChromaDB vector database storage
+├── tests/                       # Minimal pytest test suite
+└── skillo/                      # Main application package
+    ├── main.py                  # Composition root
+    ├── domain/                  # Business logic
+    │   ├── entities/            # Core business entities
+    │   ├── events/              # Domain event system
+    │   ├── services/            # Domain services
+    │   └── repositories.py      # Data access interfaces
+    ├── application/             # Use cases and workflows
+    │   ├── facades/             # Application facades
+    │   ├── use_cases/           # Business workflows
+    │   ├── protocols.py         # Service contracts
+    │   └── dto.py               # Data transfer objects
+    ├── infrastructure/          # External integrations
+    │   ├── agents/              # AI agents (LangChain)
+    │   ├── config/              # Configuration management
+    │   ├── document_processing/ # Document processors
+    │   └── repositories/        # Data implementations
+    └── ui/                      # User interface (Streamlit)
+        ├── components/          # Reusable UI components
+        └── views/               # Page views
 ```
 
 ## 📸 Screenshots
